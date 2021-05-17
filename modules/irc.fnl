@@ -33,6 +33,9 @@
 (fn join [chan]
   (sendf "JOIN %s" chan))
 
+(fn quit [msg]
+  (sendf "QUIT :%s" msg))
+
 (fn privmsg [target ...]
   (sendf "PRIVMSG %s :%s" target (table.concat [...] "")))
 
@@ -141,6 +144,7 @@ needs to be stripped from the message"
 ;; Module export
 {: nick
  : join
+ : quit
  : privmsg
  : privmsgf
  : mode

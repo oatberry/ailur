@@ -30,7 +30,7 @@
 
 (fn run []
   (local modules (load-directory-modules (.. (lfs.currentdir) "/modules")))
-  (print (fennel.view modules))
+  ;; (print (fennel.view modules))
   (local main (assert (and (= (type modules.main) :function) modules.main)
                       "No main function found"))
   (if (main)
