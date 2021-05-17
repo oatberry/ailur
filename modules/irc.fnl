@@ -99,9 +99,10 @@ needs to be stripped from the message"
   (when plugin
     (local plugin-args {:sender source :authed (= "oats" source.nick)
                         :message command :target target})
-    (local (success result) (pcall plugin.main plugin-args))
-    (when (not success)
-      (privmsg target result))))
+    (local (ok err) (pcall plugin.main plugin-args))
+    (when (not ok)
+      (io.stderr:write err "\n")
+      (privmsg target "there was a runtime error, see stderr output for details"))))
 
 (fn handle-message [tags source command]
   (match command
