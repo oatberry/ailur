@@ -10,16 +10,14 @@
                     [:second 1]])
 
 (fn main [{: target : message}]
-  (var uptime {})
   (var diff (os.difftime (os.time) start-time))
+  (local uptime-parts (icollect [_ [unit seconds-per-unit] (ipairs conversions)]
+                        (let [conversion (// diff seconds-per-unit)]
+                          (when (not= conversion 0)
+                            (local plural (if (= conversion 1) "" "s"))
+                            (set diff (- diff (* conversion seconds-per-unit)))
+                            (string.format "%d %s%s" conversion unit plural)))))
 
-  (each [_ [unit seconds-per-unit] (ipairs conversions)]
-    (local conversion (// diff seconds-per-unit))
-    (local unit-suffix (if (= conversion 1) "" "s"))
-    (when (not= conversion 0)
-      (table.insert uptime (string.format "%d %s%s" conversion unit unit-suffix))
-      (set diff (- diff (* conversion seconds-per-unit)))))
-
-  (modules.irc.privmsg target "up " (table.concat uptime ", ")))
+  (modules.irc.privmsg target "up " (table.concat uptime-parts ", ")))
 
 {: main}
