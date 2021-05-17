@@ -1,36 +1,46 @@
 (local [{:__parent modules}] [...])
 (local lume (require :lume))
 
-(local help "usage: manage <die|restart|ping|whoami|reload <\x02plugin\x0f|\x02module\x0f>>")
+(local commands {})
 
-(fn reload-module [module-name]
-  (local (ok err) (pcall modules.load modules module-name))
-  (or err "Ta-da!"))
+(fn commands.die [{: authed}] (when authed (modules.irc.signal-die)))
+(fn commands.restart [{: authed}] (when authed (modules.irc.signal-restart)))
+(fn commands.ping [{: sender}] (string.format "%s, 🐼" sender.nick))
 
-(fn reload-plugin [plugin-name]
-  (local (ok err) (pcall modules.plugins.load modules.plugins plugin-name))
-  (or err "Ta-da!"))
+(fn commands.whoami [{: sender : authed}]
+  (string.format "%s!%s@%s%s" sender.nick sender.username sender.host
+                 (if authed ", authorized" "")))
 
-(fn main [{: sender : target : authed : message}]
-  (local irc modules.irc)
+(fn commands.reload-module [{: authed} [module-name]]
+  (when authed
+    (local (ok err) (pcall #(modules:load module-name)))
+    (or err "Ta-da!")))
 
-  (match (lume.split message)
-    [:die] (when authed (irc.signal-die))
-    [:restart] (when authed (irc.signal-restart))
-    [:ping] (irc.privmsgf target "%s, 🐼" sender.nick)
+(fn commands.reload-plugin [{: authed} [plugin-name]]
+  (when authed
+    (local (ok err) (pcall #(modules.plugins:load plugin-name)))
+    (or err "Ta-da!")))
 
-    [:whoami]
-    (irc.privmsgf target "%s!%s@%s%s"
-                  sender.nick sender.username sender.host
-                  (if authed ", authorized" ""))
+(fn commands.list-plugins []
+  (local plugins (icollect [k _ (pairs modules.plugins)] k))
+  (table.concat plugins ", "))
 
-    [:reload :module what]
-    (when authed (irc.privmsg target (reload-module what)))
+(fn commands.version []
+  (with-open [out (io.popen (.. "printf \"0.r%s.%s\" "
+                                "\"$(git rev-list --count HEAD)\" "
+                                "\"$(git log -1 --pretty=format:%h)\""))]
+    (out:read)))
 
-    [:reload :plugin what]
-    (when authed (irc.privmsg target (reload-plugin what)))
+(local help (string.format
+             "usage: manage <%s>"
+             (table.concat (icollect [k _ (pairs commands)] k) "|")))
 
-    (irc.privmsg target help)))
+(fn main [{: sender : target : authed : message &as args}]
+  (local [action & rest] (lume.split message))
+  (local command (. commands action))
+  (modules.irc.privmsg target (if command
+                                  (command args rest)
+                                  help)))
 
 {: help
  : main}
