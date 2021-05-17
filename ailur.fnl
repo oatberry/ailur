@@ -5,7 +5,7 @@
 (local lume (require :lume))
 
 (fn warn [...]
-  (io.stderr:write (string.format "WARN: %s\n" (table.concat [...] ""))))
+  (io.stderr:write "WARN: " (table.concat [...] "") "\n"))
 
 (fn subdirectory? [path]
   (= (lfs.attributes path :mode) :directory))

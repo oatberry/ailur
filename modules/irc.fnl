@@ -14,7 +14,7 @@
 (fn send [...]
   "Send a message to the server, and output to console"
   (local message (table.concat [...] ""))
-  (io.stderr:write (.. ">> " message "\n"))
+  (io.stderr:write ">> " message "\n")
   (assert (connection:send (.. message "\r\n"))))
 
 (fn sendf [...] (send (string.format ...)))
@@ -34,7 +34,7 @@
   (sendf "JOIN %s" chan))
 
 (fn privmsg [target ...]
-  (sendf "PRIVMSG %s :%s" target (table.concat [...] " ")))
+  (sendf "PRIVMSG %s :%s" target (table.concat [...] "")))
 
 (fn privmsgf [target ...]
   (privmsg target (string.format ...)))
@@ -105,8 +105,8 @@ needs to be stripped from the message"
 
 (fn handle-message [tags source command]
   (match command
-    [:001] (do (join-all)
-               (mode irc-config.nick "+B"))
+    [:001] (do (mode irc-config.nick "+B")
+               (join-all))
     [:PING dest] (pong dest)
     [:PRIVMSG target message] (-?>> (find-prefix target message)
                                     (react-to-privmsg source target message))))
