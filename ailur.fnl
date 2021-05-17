@@ -17,9 +17,9 @@
   (tset modules module-name module))
 
 (fn load-directory-modules [dir-path ?parent-modules]
-  (var modules {:load load-module
-                :__directory dir-path
-                :__parent ?parent-modules})
+  (var modules (setmetatable {} {:__index {:load load-module
+                                           :__directory dir-path
+                                           :__parent ?parent-modules}}))
   (each [entry (lfs.dir dir-path)]
     (local path (.. dir-path "/" entry))
     (if (and (not= entry ".") (not= entry "..") (subdirectory? path))
