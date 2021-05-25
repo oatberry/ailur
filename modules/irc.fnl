@@ -135,7 +135,7 @@ needs to be stripped from the message"
   (local (name command) (message:match (.. prefix "%s*(%S*)%s*(.*)")))
   (local plugin (?. modules :plugins name :main))
   (when plugin
-    (local plugin-args {:sender source :authed (= "oats" source.nick)
+    (local plugin-args {:sender source :authed (= "dtl-5hv1j7.me" source.host)
                         :message command :target target})
     (run-fn-safely plugin plugin-args)))
 
