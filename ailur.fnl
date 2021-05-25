@@ -28,9 +28,19 @@
           module-name (modules:load module-name))))
   modules)
 
+(fn init-modules [modules]
+  (each [_ mod (pairs modules)]
+    (match mod
+      (where {: init} (= (type init) :function)) (init)
+      {: __directory} (init-modules mod))))
+
 (fn run []
   (local modules (load-directory-modules (.. (lfs.currentdir) "/modules")))
-  ;; (print (fennel.view modules))
+
+  ;; Some modules may depend on other modules to init things, but module load
+  ;; order is not defined. So we run each (module.init) after all are loaded.
+  (init-modules modules)
+
   (local main (assert (and (= (type modules.main) :function) modules.main)
                       "No main function found"))
   (if (main)

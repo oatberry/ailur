@@ -34,6 +34,12 @@
 (fn commands.about []
   "I'm a silly lil lispy lua bot! https://github.com/oatberry/ailur")
 
+(fn commands.debug [{: authed} [setting]]
+  (match setting
+    :on (modules.irc.set-debug true)
+    :off (modules.irc.set-debug false)
+    _ "'on' or 'off' pls"))
+
 (fn commands.whoami [{: sender : authed}]
   (string.format "%s!%s@%s%s" sender.nick sender.username sender.host
                  (if authed ", authorized" "")))

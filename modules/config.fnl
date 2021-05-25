@@ -1,10 +1,15 @@
 (local [modules] [...])
 
+(fn load-nickpass []
+  (with-open [f (io.popen "pass irc/dtella/nickserv")]
+    (f:read :l)))
+
 {:db-path (.. modules.__directory "/../" "bot.db")
 
  :irc {:host "irc.dtella.net"
        :port 6697
        :nick "ailur"
+       :nick-pass load-nickpass
        :username "oats"
        :real-name "beep boop 🐼"
        :channels ["#bots"]
