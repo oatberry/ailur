@@ -5,9 +5,10 @@
   (set bakas (+ bakas 1)))
 
 (fn main [{: target}]
-  (modules.irc.privmsg
-   target
-   (: "I see %d baka%s" :format bakas (if (= bakas 1) "" "s"))))
+  (modules.irc.privmsgf target
+                        "I see %d baka%s"
+                        bakas
+                        (if (= bakas 1) "" "s")))
 
 (fn init []
   (modules.irc.register-trigger "^%s*baka$" upbaka))
