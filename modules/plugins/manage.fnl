@@ -28,6 +28,10 @@
         "Ta-da!"
         (: "`git pull` exited with status %d" :format status))))
 
+(fn commands.join [{: authed} [place]]
+  (when (and place authed)
+    (modules.irc.join place)))
+
 (fn commands.ping [{: sender}]
   (string.format "%s, 🐼" sender.nick))
 
