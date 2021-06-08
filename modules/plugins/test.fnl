@@ -1,3 +1,5 @@
+;;; Commands to test miscellaneous things
+
 (local [{:__parent modules}] [...])
 (local lume (require :lume))
 

@@ -1,3 +1,5 @@
+;;; Bot management commands
+
 (local [{:__parent modules}] [...])
 (local lume (require :lume))
 

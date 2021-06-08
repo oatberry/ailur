@@ -1,3 +1,5 @@
+;;; Get weather from Dark Sky, using Google geocoding
+
 (local [{:__parent modules}] [...])
 (local url (require :socket.url))
 (local https (require :ssl.https))

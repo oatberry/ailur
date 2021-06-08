@@ -1,3 +1,5 @@
+;;; Baka counter
+
 (local [{:__parent modules}] [...])
 
 (var bakas 0)

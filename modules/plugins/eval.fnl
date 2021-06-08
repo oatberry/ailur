@@ -1,3 +1,5 @@
+;;; Fennel expression evaluator
+
 (local [{:__parent modules}] [...])
 (local fennel (require :fennel))
 

@@ -1,3 +1,5 @@
+;;; Display bot uptime
+
 (local [{:__parent modules}] [...])
 
 (global start-time (or start-time (os.time)))

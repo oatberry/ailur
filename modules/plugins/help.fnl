@@ -1,3 +1,4 @@
+;;; Get the help messages
 (local [{:__parent modules &as plugins}] [...])
 
 (local help "usage: help <plugin>")
