@@ -1,4 +1,5 @@
 (local [{:__parent modules}] [...])
+(local url (require :socket.url))
 (local https (require :ssl.https))
 (local json (require :json))
 
@@ -7,11 +8,12 @@
 (local culvers-api "https://www.culvers.com/api/locate/address/json?address=%s")
 (local default-zip "47906")
 
-(fn get-culvers [zip]
-  (local body (-> culvers-api
-                  (string.format zip)
-                  https.request
-                  assert))
+(fn get-culvers [search]
+  (local body (->> search
+                   url.escape
+                   (string.format culvers-api)
+                   https.request
+                   assert))
   (local j (json.decode body))
   (local restaurant (?. j :Collection :Locations 1))
   (values restaurant
