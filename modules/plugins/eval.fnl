@@ -1,7 +1,7 @@
 (local [{:__parent modules}] [...])
 (local fennel (require :fennel))
 
-(local help "eval <fennel-expr>")
+(local help "usage: eval <fennel-expr>")
 
 (fn deep-copy [orig]
   (if (= (type orig) :function)
