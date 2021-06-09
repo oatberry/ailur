@@ -15,11 +15,12 @@
                (table.concat (icollect [k _ (pairs commands)] k) "|")))
 
 (fn main [{: target : message &as args}]
-  (local [action & rest] (lume.split message))
-  (local command (. commands action))
-  (modules.irc.privmsg target (if command
-                                  (command args rest)
-                                  help)))
+  (let [[action & rest] (lume.split message)
+        command (. commands action)]
+    (modules.irc.privmsg target
+                         (if command
+                             (command args rest)
+                             help))))
 
 {: main
  : help}

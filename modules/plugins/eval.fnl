@@ -14,20 +14,20 @@
       orig))
 
 (fn main [{: authed : target : sender : message}]
-  (local safe-env {:modules (if authed modules nil)
-                   :math (deep-copy math)
-                   :os {:clock os.clock :date os.date
-                        :difftime os.difftime :time os.time}
-                   :string (deep-copy string)
-                   :table (deep-copy table)
-                   : tonumber
-                   : tostring
-                   : type})
-  (local results [(fennel.eval message {:env safe-env})])
-  (local result-strs (icollect [_ v (ipairs results)]
-                       (fennel.view v {:one-line? true :escape-newlines? true
-                                       :allowedGlobals false})))
-  (modules.irc.privmsg target (table.concat result-strs "   ")))
+  (let [safe-env {:modules (if authed modules nil)
+                  :math (deep-copy math)
+                  :os {:clock os.clock :date os.date
+                       :difftime os.difftime :time os.time}
+                  :string (deep-copy string)
+                  :table (deep-copy table)
+                  : tonumber
+                  : tostring
+                  : type}
+        results [(fennel.eval message {:env safe-env})]
+        result-strs (icollect [_ v (ipairs results)]
+                      (fennel.view v {:one-line? true :escape-newlines? true
+                                      :allowedGlobals false}))]
+    (modules.irc.privmsg target (table.concat result-strs "   "))))
 
 {: help
  : main}

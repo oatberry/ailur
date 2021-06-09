@@ -25,10 +25,10 @@
 
 (fn commands.update [{: authed}]
   (when authed
-    (local (_ _ status) (os.execute "git pull"))
-    (if (= status 0)
-        "Ta-da!"
-        (: "`git pull` exited with status %d" :format status))))
+    (let [(_ _ status) (os.execute "git pull")]
+      (if (= status 0)
+          "Ta-da!"
+          (: "`git pull` exited with status %d" :format status)))))
 
 (fn commands.join [{: authed} [place]]
   (when (and place authed)
@@ -57,8 +57,8 @@
   (reload args modules.plugins plugin-name))
 
 (fn commands.list-plugins []
-  (local plugins (icollect [k _ (pairs modules.plugins)] k))
-  (table.concat plugins ", "))
+  (let [plugins (icollect [k _ (pairs modules.plugins)] k)]
+    (table.concat plugins ", ")))
 
 (fn commands.version []
   (with-open [out (io.popen (.. "printf \"0.r%s.%s\" "
@@ -71,11 +71,11 @@
              (table.concat (icollect [k _ (pairs commands)] k) "|")))
 
 (fn main [{: sender : target : authed : message &as args}]
-  (local [action & rest] (lume.split message))
-  (local command (. commands action))
-  (modules.irc.privmsg target (if command
-                                  (command args rest)
-                                  help)))
+  (let [[action & rest] (lume.split message)
+        command (. commands action)]
+    (modules.irc.privmsg target (if command
+                                    (command args rest)
+                                    help))))
 
 {: help
  : main}
