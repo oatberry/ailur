@@ -23,9 +23,11 @@
 
 (fn main [{: target : message}]
   (local location (if (= message "") default-zip message))
+
   (match (get-culvers location)
     {:Name name :FlavorDay fotd}
     (modules.irc.privmsgf target "%s FOTD: \x02%s" name fotd)
+
     (nil err)
     (modules.irc.privmsg target err)))
 

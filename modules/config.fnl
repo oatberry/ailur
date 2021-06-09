@@ -12,7 +12,7 @@
        :nick-pass load-nickpass
        :username "oats"
        :real-name "beep boop 🐼"
-       :channels ["#bots"]
+       :channels ["#bots" "#dtella"]
        :ssl-params {:mode "client"
                     :protocol "tlsv1_2"
                     :verify "none"
