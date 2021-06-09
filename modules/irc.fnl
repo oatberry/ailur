@@ -41,7 +41,9 @@
   (sendf "QUIT :%s" msg))
 
 (fn privmsg [target ...]
-  (sendf "PRIVMSG %s :%s" target (table.concat [...] "")))
+  (local message (table.concat [...] ""))
+  (each [_ line (ipairs (lume.split message "\n"))]
+    (sendf "PRIVMSG %s :%s" target line)))
 
 (fn privmsgf [target ...]
   (privmsg target (string.format ...)))

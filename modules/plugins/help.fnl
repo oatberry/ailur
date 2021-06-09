@@ -1,13 +1,15 @@
 ;;; Get the help messages
 (local [{:__parent modules &as plugins}] [...])
 
-(local help "usage: help <plugin>")
+(local help "usage: help <plugin>\nsee also: manage list-plugins")
 
 (fn main [{: target : message}]
-  (local help-msg (?. plugins message :help))
   (modules.irc.privmsgf
    target
-   (or help-msg "No help available for that topic.")))
+   (if (= message "")
+       help
+       (or (?. plugins message :help)
+           "No help available for that topic."))))
 
 {: help
  : main}
